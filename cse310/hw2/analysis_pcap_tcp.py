@@ -2,18 +2,21 @@ import dpkt
 import socket
 from enum import Enum
 
-# class syntax
 
 class STATE(Enum):
     LOADING = 0
     SENT_FIRST_SYN = 1
-    SENT_SECOND_SYN = 2
-    FIRST_TRANSACTION_SENT = 3
-    SECOND_TRANSACTION_SENT = 4
-    IN_PROGRESS = 5
-    FINISHED = 6
+    RECEIVED_SYN_ACK = 2
+    SENT_SECOND_SYN = 3
+    FIRST_TRANSACTION_SENT = 4
+    SECOND_TRANSACTION_SENT = 5
+    IN_PROGRESS = 6
+    SENT_FIN = 7
+    RECEIVED_FIN_ACK = 8
+    ENDING = 9
 
-class Packet:
+
+class Flow:
     def __init__(self, conn_key, ip, tcp, start):
         self.conn = conn_key
         self.ip = ip
@@ -25,17 +28,25 @@ class Packet:
         self.sequence = ()
         self.ack = ()
         self.r_window = ()
+
     def get_throughput(self):
         return self.data_sent / (self.finish_time - self.starting_time)
+
     def __str__(self):
         return f"Connection:{self.conn}, data sent:{self.data_sent}, start time: {self.starting_time}, thoughput:{self.get_throughput()}"
 
-f= open('assignment2.pcap', 'rb')
+
+f = open('assignment2.pcap', 'rb')
 pcap = dpkt.pcap.Reader(f)
 
 flows = dict()
 time = -1
+PACKET_COUNT = 0
+PACKET_CONTROL = 1000000
 for timestamp, buf in pcap:
+    PACKET_COUNT += 1
+    if PACKET_COUNT == PACKET_CONTROL:
+        break
     eth = dpkt.ethernet.Ethernet(buf)
     if time == -1:
         time = timestamp
@@ -44,8 +55,6 @@ for timestamp, buf in pcap:
         src_ip = socket.inet_ntoa(ip.src)
         dst_ip = socket.inet_ntoa(ip.dst)
         packet_size = len(ip.data)
-        print("Packet size:", packet_size)
-        print(timestamp- time)
         if isinstance(ip.data, dpkt.tcp.TCP):
             tcp = ip.data
             src_port = tcp.sport
@@ -53,30 +62,48 @@ for timestamp, buf in pcap:
             protocol = "TCP"
         conn_key = (src_ip, src_port, dst_ip, dst_port)
         conn_key_reverse = (dst_ip, dst_port, src_ip, src_port)
-        curr_packet = Packet(conn_key, ip, ip.data, timestamp - time)
+        curr_packet = Flow(conn_key, ip, ip.data, timestamp - time)
         if conn_key in flows.keys():
             curr_packet = flows[conn_key]
+            curr_packet.data_sent += packet_size
         elif conn_key_reverse in flows.keys():
             curr_packet = flows[conn_key_reverse]
         else:
+            curr_packet.data_sent += packet_size
             flows[conn_key] = curr_packet
-        curr_packet.data_sent += packet_size
-        state = ""
+
         if tcp.flags & dpkt.tcp.TH_SYN and tcp.flags & dpkt.tcp.TH_ACK:
-            pass
+            if curr_packet.state == STATE.SENT_FIRST_SYN:
+                curr_packet.state = STATE.RECEIVED_SYN_ACK
         elif tcp.flags & dpkt.tcp.TH_FIN and tcp.flags & dpkt.tcp.TH_ACK:
-            pass  # print("FIN_ACK_RECEIVED")
+            if curr_packet.state == STATE.SENT_FIN:
+                curr_packet.state = STATE.RECEIVED_FIN_ACK
         elif tcp.flags & dpkt.tcp.TH_SYN:
-            print("SYN_SENT")
+            if curr_packet.state == STATE.LOADING:
+                curr_packet.state = STATE.SENT_FIRST_SYN
         elif tcp.flags & dpkt.tcp.TH_FIN:
+            # Maybe the other person can initiate FIN?
+            if curr_packet.state == STATE.IN_PROGRESS and conn_key in flows.keys():
+                curr_packet.state = STATE.SENT_FIN
             print("FIN_SENT")
         elif tcp.flags & dpkt.tcp.TH_ACK:
-            pass  #print("ACK")
+            if curr_packet.state == STATE.RECEIVED_SYN_ACK:
+                curr_packet.state = STATE.SENT_SECOND_SYN
+            if curr_packet.state == STATE.SENT_SECOND_SYN and conn_key in flows.keys():
+                curr_packet.state = STATE.FIRST_TRANSACTION_SENT
+                # This packet is sending the first transaction
+            if curr_packet.state == STATE.FIRST_TRANSACTION_SENT and conn_key in flows.keys():
+                curr_packet.state = STATE.SECOND_TRANSACTION_SENT
+                # This packet is sending the second transaction
+            if curr_packet.state == STATE.SECOND_TRANSACTION_SENT and conn_key in flows.keys():
+                curr_packet.state = STATE.IN_PROGRESS
+            if curr_packet.state == STATE.RECEIVED_FIN_ACK and conn_key in flows.keys():
+                curr_packet.state = STATE.ENDING
         if tcp.flags & dpkt.tcp.TH_FIN:
             curr_packet.finish_time = timestamp - time
-            print("FIN_SENT")
+            if curr_packet.state == STATE.IN_PROGRESS and conn_key in flows.keys():
+                curr_packet.state = STATE.SENT_FIN
 
         # print(f"Protocol: {protocol}, Source IP: {src_ip}, Source Port: {src_port}, Destination IP: {dst_ip}, Destination Port: {dst_port}, Flags: {state}")
-            
-for key in flows.keys():
-    print(str(flows[key]))
+for flow_key in flows.keys():
+    print(flows[flow_key].state)
