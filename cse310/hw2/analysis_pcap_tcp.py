@@ -9,7 +9,17 @@ class Comp:
         self.val = val
 
     def __lt__(self, other):
-        return abs(self.val - target) < abs(other.val - target)
+        self_val = 0
+        other_val = 0
+        if self.val.is_send:
+            self_val = self.val.seq
+        else:
+            self_val = self.val.ack
+        if other.is_send:
+            other_val = other.seq
+        else:
+            other_val = other.ack
+        return self_val < other_val
 
 
 class MinHeap:
@@ -41,10 +51,15 @@ class STATE(Enum):
     RECEIVED_FIN_ACK = 8
     ENDING = 9
 
+
 class Packet:
 
-    def __init__(self, seq, ack, conn_key):
-        self.seq = 
+    def __init__(self, seq, ack, conn_key, is_send):
+        self.seq = seq
+        self.ack = ack
+        self.conn_key = conn_key
+        self.is_send = is_send
+
 
 class Flow:
     def __init__(self, conn_key, ip, tcp, start):
