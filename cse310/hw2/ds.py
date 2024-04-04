@@ -1,32 +1,5 @@
-import heapq
+
 from enum import Enum
-
-class Comp:
-    def __init__(self, val):
-        self.val = val
-
-    def __lt__(self, other):
-        self_val = self.val.seq
-        other_val = other.seq
-        return self_val < other_val
-
-
-class MinHeap:
-    def __init__(self):
-        self.heap = []
-
-    def push(self, val):
-        heapq.heappush(self.heap, Comp(val))
-
-    def pop(self):
-        return heapq.heappop(self.heap).val
-
-    def peek(self):
-        return self.heap[0].val if self.heap else None
-
-    def __len__(self):
-        return len(self.heap)
-
 
 class STATE(Enum):
     LOADING = 0

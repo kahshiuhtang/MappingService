@@ -1,3 +1,11 @@
-a) Sender is on 130.245.145.12 and reciever is on port 128.208.2.198. The sender will send from ports 43498 43500 and 43502 while the reciever will be on port 80. There are three flows
+Part 1:
+- To calculate the different flows, I used a map to keep track of unique src/dest ip/port combinations. I consider the key that you would recieve to be the same as the one you would send. 
 
-b)
+- I used enums to keep track of the state a flow was in. I would print out the SEQ, ACK numbers and Recieve Window size when I sent the first 
+
+- I would keep track of how many bytes I has sent starting with the first SYN packet to the last ACK packet. I would also keep track of the time of the first and last packet sent. Dividing these two gave me the throughput.
+
+Part 2:
+- I calculate the first RTT by using the time difference between the first SYN and SYN/ACK response. I would recalculate the window size every RTT, but I would nto ever actually recalculate the RTT value. I would look at the MAX amount of packets out during the this timeframe and call that the congestion window size. 
+
+- To keep track of the retransmissions, I looked at how many time any SEQ number was sent out. Every time I saw that a second SEQ number was sent out, I would check to see if I had recieved 1 ACK for it or many ACKs for it. If I had recieved many ACKs, this would indicate that this was a FAST retransmit due to triple duplicate ACK. If I had recieved only one ACK before, I would consider this a retransmission. 

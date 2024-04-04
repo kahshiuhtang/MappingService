@@ -149,11 +149,13 @@ for timestamp, buf in pcap:
                 print(conn_key)
             else:
                 print(conn_key_reverse)
-            print("WINDOW: " + str(CURR_FLOW_.max_packets_out))
-            CURR_FLOW_.baseline = timestamp - time
-            CURR_FLOW_.max_packets_out = 0
-            CURR_FLOW_.printed += 1
-            print("---------")
+            if CURR_FLOW_.max_packets_out != 0:
+                print("WINDOW: " + str(CURR_FLOW_.printed + 1))
+                print("WINDOW SIZE: " + str(CURR_FLOW_.max_packets_out))
+                CURR_FLOW_.baseline = timestamp - time
+                CURR_FLOW_.max_packets_out = 0
+                CURR_FLOW_.printed += 1
+                print("---------")
         # print(f"Protocol: {protocol}, Source IP: {src_ip}, Source Port: {src_port}, Destination IP: {dst_ip}, Destination Port: {dst_port}, Flags: {state}")
 for flow_key in flows.keys():
     print("Connection: (src_ip, src_port, dest_ip, dest_port)")
