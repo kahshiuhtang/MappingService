@@ -11,15 +11,9 @@ pcap = dpkt.pcap.Reader(f)
 flows = dict()
 one_flow = None
 time = -1
-MAX = 10000000000
-PACKET_COUNT = 0
-PACKET_CONTROL = MAX
 
 
 for timestamp, buf in pcap:
-    if PACKET_COUNT == PACKET_CONTROL:
-        break
-    PACKET_COUNT += 1
     eth = dpkt.ethernet.Ethernet(buf)
     if time == -1:
         time = timestamp
@@ -43,6 +37,9 @@ for timestamp, buf in pcap:
             CURR_FLOW_ = flows[conn_key_reverse]
         else:
             CURR_FLOW_.data_sent += packet_size
+            print("New Flow Started:")
+            print(conn_key)
+            print("----------------------------------")
             flows[conn_key] = CURR_FLOW_
         
         if tcp.flags & dpkt.tcp.TH_SYN and tcp.flags & dpkt.tcp.TH_ACK:
@@ -145,11 +142,11 @@ for timestamp, buf in pcap:
                 CURR_FLOW_.seqs.update({ack: 1})
 
         if CURR_FLOW_.printed < 3 and timestamp - time > CURR_FLOW_.baseline + CURR_FLOW_.current_rtt:
-            if conn_key in flows.keys():
-                print(conn_key)
-            else:
-                print(conn_key_reverse)
             if CURR_FLOW_.max_packets_out != 0:
+                if conn_key in flows.keys():
+                    print(conn_key)
+                else:
+                    print(conn_key_reverse)
                 print("WINDOW: " + str(CURR_FLOW_.printed + 1))
                 print("WINDOW SIZE: " + str(CURR_FLOW_.max_packets_out))
                 CURR_FLOW_.baseline = timestamp - time
@@ -159,9 +156,7 @@ for timestamp, buf in pcap:
 for flow_key in flows.keys():
     print("Connection: (src_ip, src_port, dest_ip, dest_port)")
     curr_flow = flows[flow_key]
-    # print(curr_flow.packets)
-    #for packet in curr_flow.packets:
-    #    print(packet)
+    print(conn_key)
     sum = -1
     for key in curr_flow.acks.keys():
         val = curr_flow.acks[key]
