@@ -1,7 +1,7 @@
 import dpkt
 import socket
 
-from ds import MinHeap, STATE, Packet,Flow 
+from ds import STATE, Packet,Flow 
 
 
 transactions = [STATE.IN_PROGRESS, STATE.FIRST_TRANSACTION_SENT, STATE.SECOND_TRANSACTION_SENT, STATE.SENT_FIN, STATE.RECEIVED_FIN_ACK, STATE.ENDING]
@@ -68,15 +68,15 @@ for timestamp, buf in pcap:
             if CURR_FLOW_.state == STATE.SENT_SECOND_SYN and conn_key in flows.keys():
                 CURR_FLOW_.state = STATE.FIRST_TRANSACTION_SENT
                 # This packet is sending the first transaction
-                # print("FIRST TRANSACTION")
-                # print(conn_key)
+                print("FIRST TRANSACTION")
+                print(conn_key)
                 sequence_number = tcp.seq
                 ack_number = tcp.ack
                 window_size = tcp.win
-                # print("Sequence number:", sequence_number)
-                # print("Ack number:", ack_number)
-                # print("Receive Window size:", window_size)
-                # print("-------------------------------------")
+                print("Sequence number:", sequence_number)
+                print("Ack number:", ack_number)
+                print("Receive Window size:", window_size)
+                print("-------------------------------------")
             if conn_key in flows.keys():
                 sequence_number = tcp.seq
                 ack_number = tcp.ack
@@ -93,15 +93,15 @@ for timestamp, buf in pcap:
             if CURR_FLOW_.state == STATE.FIRST_TRANSACTION_SENT and conn_key in flows.keys():
                 CURR_FLOW_.state = STATE.SECOND_TRANSACTION_SENT
                 # This packet is sending the second transaction
-                # print("SECOND TRANSACTION")
-                # print(conn_key)
+                print("SECOND TRANSACTION")
+                print(conn_key)
                 sequence_number = tcp.seq
                 ack_number = tcp.ack
                 window_size = tcp.win
-                # print("Sequence number:", sequence_number)
-                # print("Ack number:", ack_number)
-                # print("Receive Window size:", window_size)
-                # print("-------------------------------------")
+                print("Sequence number:", sequence_number)
+                print("Ack number:", ack_number)
+                print("Receive Window size:", window_size)
+                print("-------------------------------------")
             if CURR_FLOW_.state == STATE.RECEIVED_FIN_ACK and conn_key in flows.keys():
                 CURR_FLOW_.state = STATE.ENDING
         if tcp.flags & dpkt.tcp.TH_FIN:
@@ -156,7 +156,6 @@ for timestamp, buf in pcap:
                 CURR_FLOW_.max_packets_out = 0
                 CURR_FLOW_.printed += 1
                 print("---------")
-        # print(f"Protocol: {protocol}, Source IP: {src_ip}, Source Port: {src_port}, Destination IP: {dst_ip}, Destination Port: {dst_port}, Flags: {state}")
 for flow_key in flows.keys():
     print("Connection: (src_ip, src_port, dest_ip, dest_port)")
     curr_flow = flows[flow_key]
@@ -172,5 +171,5 @@ for flow_key in flows.keys():
     print("Triple Duplicate: " + str(curr_flow.retransmits_trip))
     print("Timeout: " + str(max(curr_flow.retransmits_timeout - 1, 0)))
     print("Throughput (bytes per second)")
-    # print(flows[flow_key].get_throughput())
+    print(flows[flow_key].get_throughput())
     print("--------------------------------")
