@@ -67,6 +67,13 @@ class Flow:
         self.seqs = dict() # Map the requests you send out and how many times
         self.retransmits_timeout = 0
         self.retransmits_trip = 0
+
+        self.max_packets_out = 0
+        self.window = []
+        self.current_rtt = -1
+        self.baseline = -1
+        self.printed = 0
+
         
 
     def get_throughput(self):
@@ -74,3 +81,5 @@ class Flow:
 
     def __str__(self):
         return f"Connection:{self.conn}, data sent:{self.data_sent}, start time: {self.starting_time}, thoughput:{self.get_throughput()}"
+    
+

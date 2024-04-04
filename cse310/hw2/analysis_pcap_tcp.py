@@ -48,6 +48,10 @@ for timestamp, buf in pcap:
         if tcp.flags & dpkt.tcp.TH_SYN and tcp.flags & dpkt.tcp.TH_ACK:
             if CURR_FLOW_.state == STATE.SENT_FIRST_SYN:
                 CURR_FLOW_.state = STATE.RECEIVED_SYN_ACK
+            if conn_key_reverse in flows.keys() and CURR_FLOW_.state == STATE.RECEIVED_SYN_ACK:
+                CURR_FLOW_.current_rtt = timestamp - CURR_FLOW_.starting_time - time
+                CURR_FLOW_.baseline = timestamp - time
+                print(CURR_FLOW_.current_rtt)
         elif tcp.flags & dpkt.tcp.TH_FIN and tcp.flags & dpkt.tcp.TH_ACK:
             if CURR_FLOW_.state == STATE.SENT_FIN:
                 CURR_FLOW_.state = STATE.RECEIVED_FIN_ACK
@@ -106,9 +110,9 @@ for timestamp, buf in pcap:
                 CURR_FLOW_.state = STATE.SENT_FIN
         if one_flow == None:
             one_flow = conn_key
-        print(CURR_FLOW_.state)
         if conn_key in flows.keys() and CURR_FLOW_.state in transactions:
             CURR_FLOW_.packets.append(Packet(tcp.seq, tcp.ack))
+            CURR_FLOW_.max_packets_out = max(CURR_FLOW_.max_packets_out, len(CURR_FLOW_.packets))
         elif conn_key_reverse in flows.keys() and CURR_FLOW_.state in transactions:
             ack = tcp.ack
             curr_flow = flows[conn_key_reverse]
@@ -139,6 +143,17 @@ for timestamp, buf in pcap:
                 CURR_FLOW_.seqs[ack] += 1
             else:
                 CURR_FLOW_.seqs.update({ack: 1})
+
+        if CURR_FLOW_.printed < 3 and timestamp - time > CURR_FLOW_.baseline + CURR_FLOW_.current_rtt:
+            if conn_key in flows.keys():
+                print(conn_key)
+            else:
+                print(conn_key_reverse)
+            print("WINDOW: " + str(CURR_FLOW_.max_packets_out))
+            CURR_FLOW_.baseline = timestamp - time
+            CURR_FLOW_.max_packets_out = 0
+            CURR_FLOW_.printed += 1
+            print("---------")
         # print(f"Protocol: {protocol}, Source IP: {src_ip}, Source Port: {src_port}, Destination IP: {dst_ip}, Destination Port: {dst_port}, Flags: {state}")
 for flow_key in flows.keys():
     print("Connection: (src_ip, src_port, dest_ip, dest_port)")
