@@ -62,6 +62,7 @@ class Flow:
         self.state = STATE.LOADING
         self.packets = []
         self.acks_seqs = dict()
+        self.curr_seq = 0
         self.acks = dict() # Map the responses you get to how many times you get them
         self.seqs = dict() # Map the requests you send out and how many times
         self.retransmits_timeout = 0

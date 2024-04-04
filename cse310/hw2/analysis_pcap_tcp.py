@@ -125,32 +125,20 @@ for timestamp, buf in pcap:
             ack = tcp.ack
             seq = tcp.seq
             if seq in CURR_FLOW_.acks.keys():
-                CURR_FLOW_.acks[(ack,seq)] += 1
+                CURR_FLOW_.acks[seq] += 1
+                if seq in CURR_FLOW_.seqs.keys() and  CURR_FLOW_.seqs[seq] > 1:
+                    CURR_FLOW_.retransmits_trip += 1
+                elif seq in CURR_FLOW_.seqs.keys() and CURR_FLOW_.seqs[seq] == 1:
+                    CURR_FLOW_.retransmits_timeout += 1
             else:
-                CURR_FLOW_.acks.update({(ack,seq): 1})
+                CURR_FLOW_.acks.update({seq: 1})
         elif conn_key_reverse in flows.keys():
             ack = tcp.ack
             seq = tcp.seq
-            if (ack, seq) in CURR_FLOW_.seqs.keys():
-                CURR_FLOW_.seqs[(ack,seq)] += 1
+            if ack in CURR_FLOW_.seqs.keys():
+                CURR_FLOW_.seqs[ack] += 1
             else:
-                CURR_FLOW_.seqs.update({(ack,seq): 1})
-        # Want to check from sender to reciever
-        # Want to see how many repeat we get
-        if conn_key in flows.keys() and (one_flow == conn_key):
-            ack_num = ip.data.ack
-            seq_num = ip.data.seq
-            print("SENT")
-            print("ACK: " + str(ack_num))
-            print("SEQ: " + str(seq_num))
-            print("----------------------------")
-        elif conn_key_reverse in flows.keys() and (one_flow == conn_key_reverse):
-            ack_num = ip.data.ack
-            seq_num = ip.data.seq
-            print("RECV")
-            print("ACK: " + str(ack_num))
-            print("SEQ: " + str(seq_num))
-            print("----------------------------")
+                CURR_FLOW_.seqs.update({ack: 1})
         # print(f"Protocol: {protocol}, Source IP: {src_ip}, Source Port: {src_port}, Destination IP: {dst_ip}, Destination Port: {dst_port}, Flags: {state}")
 for flow_key in flows.keys():
     print("Connection: (src_ip, src_port, dest_ip, dest_port)")
@@ -158,10 +146,14 @@ for flow_key in flows.keys():
     # print(curr_flow.packets)
     #for packet in curr_flow.packets:
     #    print(packet)
-    for key in curr_flow.seqs.keys():
-        val = curr_flow.seqs[key]
-        if val != 1:
-            print(val)
+    sum = -1
+    for key in curr_flow.acks.keys():
+        val = curr_flow.acks[key]
+        if val > 1:
+            sum += 1
+    print("Total Retransmissions: "+ str(sum))
+    print("Triple Duplicate: " + str(curr_flow.retransmits_trip))
+    print("Timeout: " + str(max(curr_flow.retransmits_timeout - 1, 0)))
     print("Throughput (bytes per second)")
     # print(flows[flow_key].get_throughput())
     print("--------------------------------")
