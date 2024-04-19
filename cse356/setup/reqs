@@ -1,0 +1,72 @@
+## Convert
+apt update && apt install apache2 -y && apt install php libapache2-mod-php -y
+174.138.70.2/convert.php
+convert.php
+
+## Turn
+http://138.197.25.138:25000/turn/41.7085,-76.9525/41.3655,-76.0271.png
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && tset && nvm install --lts
+mkdir turn && cd turn 
+npm init
+npm install express axios nodemon sharp stream 
+npm install forever -g 
+NODEMON START ("start": "nodemon index.js")
+COPY INDEX.JS
+forever start index.js
+
+## Address
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && tset && nvm install --lts
+mkdir address && cd address 
+npm init -y
+npm install express nodemon stream @elastic/elasticsearch
+npm install forever -g
+NODEMON START
+COPY INDEX.JS
+forever start index.js
+
+May have to sort by distance
+
+## Search
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash && tset && nvm install --lts
+mkdir search && cd search 
+npm init -y
+npm install express nodemon stream @elastic/elasticsearch
+npm install forever -g
+NODEMON START
+COPY INDEX.JS
+forever start index.js
+
+## Tiles
+
+docker volume create osm-data
+docker volume create osm-tiles
+curl -OT  [LINK]
+docker run \
+    -v /root/us-northeast.osm.pbf:/data/region.osm.pbf \
+    -v osm-data:/data/database/ \
+    overv/openstreetmap-tile-server \
+    import
+docker run \
+    -p 8080:80 \
+    -p 5432:5432 \
+    -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
+    -v osm-data:/data/database/ \
+    -v osm-tiles:/data/tiles/ \
+    -d overv/openstreetmap-tile-server \
+    run
+
+search: 165.227.213.234
+load-balancer: 161.35.130.171
+varnish: 167.172.239.172
+turn: 138.197.25.138
+convert: 174.138.70.2
+address: 104.131.173.167
+routing-engine: 159.203.77.78
+elasticsearch: 64.23.254.233
+tiles:146.190.141.61
+
+# Load Balancer
+apt update && apt install apache2 -y && apt install php libapache2-mod-php -y
+sudo a2enmod proxy proxy_http proxy_balancer lbmethod_byrequests rewrite headers
+systmctl restart apache2
+sudo a2ensite milestone.conf
