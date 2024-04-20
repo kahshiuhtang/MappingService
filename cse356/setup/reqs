@@ -71,4 +71,23 @@ sudo a2enmod proxy proxy_http proxy_balancer lbmethod_byrequests rewrite headers
 systemctl restart apache2
 sudo a2ensite milestone.conf
 rm 000-default.conf
+
+// 
+a2dismod php8.1
+a2dismod mpm_prefork
+a2enmod mpm_worker
+sudo vi /etc/apache2/mods-available/mpm_worker.conf
+FIND THIS SECTION AND REPLACE: 
+
+<IfModule mpm_worker_module>
+ServerLimit 250
+StartServers 10
+MinSpareThreads 75
+MaxSpareThreads 250
+ThreadLimit 64
+ThreadsPerChild 32
+MaxRequestWorkers 8000
+MaxConnectionsPerChild 10000
+</IfModule>
+
 https://ubiq.co/tech-blog/increase-apache-requests-per-second/
