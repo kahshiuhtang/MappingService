@@ -28,6 +28,6 @@ export const options = {
 export default () => {
     let x = Math.floor(Math.random() * (35000 - 30000 + 1)) + 30000;
     let y = Math.floor(Math.random() * (49000 - 44000 + 1)) + 44000;
-    const urlRes = http.get(`http://167.172.239.172/tile/17/${x}/${y}.png`);
+    const urlRes = http.get(`http://143.198.19.157/tiles/17/${x}/${y}.png`);
     sleep(1);
 };

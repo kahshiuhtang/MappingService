@@ -68,5 +68,7 @@ tiles:146.190.141.61
 # Load Balancer
 apt update && apt install apache2 -y && apt install php libapache2-mod-php -y
 sudo a2enmod proxy proxy_http proxy_balancer lbmethod_byrequests rewrite headers
-systmctl restart apache2
+systemctl restart apache2
 sudo a2ensite milestone.conf
+rm 000-default.conf
+https://ubiq.co/tech-blog/increase-apache-requests-per-second/
