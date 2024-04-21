@@ -49,21 +49,23 @@ docker run \
 docker run \
     -p 8080:80 \
     -p 5432:5432 \
-    -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
+    -e THREADS=24 \
+    -e "OSM2PGSQL_EXTRA_ARGS=-C 6096" \
     -v osm-data:/data/database/ \
     -v osm-tiles:/data/tiles/ \
     -d overv/openstreetmap-tile-server \
     run
 
 search: 165.227.213.234
-load-balancer: 161.35.130.171
+load-balancer: 143.198.19.157
 varnish: 167.172.239.172
 turn: 138.197.25.138
 convert: 174.138.70.2
 address: 104.131.173.167
 routing-engine: 159.203.77.78
 elasticsearch: 64.23.254.233
-tiles:146.190.141.61
+tiles: 146.190.141.61
+email: 
 
 # Load Balancer
 apt update && apt install apache2 -y && apt install php libapache2-mod-php -y
@@ -91,3 +93,46 @@ MaxConnectionsPerChild 10000
 </IfModule>
 
 https://ubiq.co/tech-blog/increase-apache-requests-per-second/
+
+## Varnish
+https://stackoverflow.com/questions/70259212/varnish-max-threads-hit-backend-and-session-connections-issue
+
+Docker Install:
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+
+VERSION=v0.35.0 # use the latest release version from https://github.com/google/cadvisor/releases
+sudo docker run \
+  --volume=/:/rootfs:ro \
+  --volume=/var/run:/var/run:rw \
+  --volume=/sys:/sys:ro \
+  --volume=/var/lib/docker/:/var/lib/docker:ro \
+  --publish=9091:8080 \
+  --detach=true \
+  --name=cadvisor \
+  gcr.io/cadvisor/cadvisor:$VERSION
+
+docker run -dit -p 9101:9100 --restart always --name node-exporter prom/node-exporter
+
+docker volume create prometheus-data
+docker run --rm --detach \
+    --publish 9090:9090 \
+    -v /root/prom.yml:/etc/prometheus/prometheus.yml \
+    -v prometheus-data:/prometheus \
+    prom/prometheus
+
+docker run -dit --name grafana --restart always -p 3000:3000 grafana/grafana
