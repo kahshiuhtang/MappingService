@@ -49,8 +49,8 @@ docker run \
 docker run \
     -p 8080:80 \
     -p 5432:5432 \
-    -e THREADS=24 \
-    -e "OSM2PGSQL_EXTRA_ARGS=-C 6096" \
+    --name "tileserver" \
+    -e "OSM2PGSQL_EXTRA_ARGS=-C 4096" \
     -v osm-data:/data/database/ \
     -v osm-tiles:/data/tiles/ \
     -d overv/openstreetmap-tile-server \
