@@ -1,0 +1,58 @@
+
+#
+# This is an example VCL file for Varnish.
+#
+# It does not do anything by default, delegating control to the
+# builtin VCL. The builtin VCL is called when there is no explicit
+# return statement.
+#
+# See the VCL chapters in the Users Guide at https://www.varnish-cache.org/docs/
+# and https://www.varnish-cache.org/trac/wiki/VCLExamples for more examples.
+vcl 4.0;
+
+backend tiles {
+    .host = "167.172.239.172";
+    .port = "80";
+}
+
+backend default{
+    .host = "209.151.153.52";
+    .port = "80";
+}
+
+sub vcl_recv {
+    if (req.url ~ "^/tiles/") {
+        set req.url = regsub(req.url, "^/tiles/(.*)", "/tile/\1");
+        set req.backend_hint = tiles;
+    } else {
+        set req.backend_hint = default;
+    }
+}
+
+sub vcl_backend_response {
+    # Happens after we have read the response headers from the backend.
+    #
+    # Here you clean the response headers, removing silly Set-Cookie headers
+    # and other mistakes your backend does.
+}
+
+sub vcl_deliver {
+    # Happens when we have all the pieces we need, and are about to send the
+    # response to the client.
+    #
+    # You can do accounting or modifying the final object here.
+}
+
+    # Add ".php" to the request
+    RewriteRule ^api/search$ /api/search.php [L]
+    RewriteRule ^api/adduser$ /api/adduser.php [L]
+    RewriteRule ^convert$ convert.php [L]
+    RewriteRule ^api/verify$ /api/verify.php [L,QSA]
+    RewriteRule ^api/login$ /api/login.php [L,QSA]
+    RewriteRule ^api/logout$ /api/logout.php [L,QSA]
+    RewriteRule ^api/user$ /api/user.php [L,QSA]
+    RewriteRule ^api/route$ /api/route.php [L,QSA]
+    RewriteRule ^turn$ /turn.php [L,QSA]
+    RewriteRule ^turn/([^/]+)/([^/]+)\.png$ /turn.php?topleft=$1&bottomright=$2 [QSA,L]
+    #RewriteRule ^tiles/([^/]+)/([^/]+)/([^/]+)\.png$ http://194.113.75.116:8081/tile/$1/$2/$3.png [L,R=301]
+    RewriteRule ^api/address$ /api/address.php [L,QSA]
