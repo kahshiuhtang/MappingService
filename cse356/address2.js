@@ -1,41 +1,34 @@
-
 const express = require("express");
-const { Readable } = require('stream');
-var axios = require('axios');
+const { Readable } = require("stream");
+var axios = require("axios");
 const app = express();
 const index = "points,lines,multilinestrings,multipolygons,other_relations"; // Replace with your index name
 app.use(express.json());
-app.post("/api/address", async function(req, res) {
+app.post("/api/address", async function (req, res) {
   const { lat, lon } = req.body;
-  console.log(req.body)
+  console.log(req.body);
 
-var config = {
-  method: 'get',
-  url: `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=1b5d2c0f481446dea579ad74ad3f2ef9`,
-  headers: { }
-};
-
-axios(config)
-.then(function (response) {
-  console.log(response.data["features"][0]["properties"]);
-  var point =response.data["features"][0]["properties"]
-  var city_names = point["city"].split(" ")
-  var n = point["city"]
-  if(city_names.length != 0){
-    n = city_names[city_names.length - 1]
-  }
-  res.status(200).json({
-    "number": point["housenumber"] ? point["housenumber"] : "",
-    "street": point["street"] ? point["street"] : "",
-    "city": point["city"] ?  "Stony Brook": "",
-    "state": point["state"] ? point["state"] : "", 
-    "country": "US"
-  })
-})
-.catch(function (error) {
-  console.log(error);
+  axios(config)
+    .then(function (response) {
+      console.log(response.data["features"][0]["properties"]);
+      var point = response.data["features"][0]["properties"];
+      var city_names = point["city"].split(" ");
+      var n = point["city"];
+      if (city_names.length != 0) {
+        n = city_names[city_names.length - 1];
+      }
+      res.status(200).json({
+        number: point["housenumber"] ? point["housenumber"] : "",
+        street: point["street"] ? point["street"] : "",
+        city: point["city"] ? "Stony Brook" : "",
+        state: point["state"] ? point["state"] : "",
+        country: "US",
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 });
-})
 
 app.listen(25000, "0.0.0.0", async () => {
   console.log("search server started");
