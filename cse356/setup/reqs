@@ -77,7 +77,7 @@ rm 000-default.conf
 // 
 a2dismod php8.1
 a2dismod mpm_prefork
-a2enmod mpm_worker
+a2dismod mpm_worker
 sudo vi /etc/apache2/mods-available/mpm_worker.conf
 FIND THIS SECTION AND REPLACE: 
 
@@ -186,7 +186,7 @@ tags -> 'address' IS NOT NULL
 ORDER BY dist ASC
 LIMIT 100;
 
-SELECT p1.point <-> ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326) AS dist, 
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-73.13018149999999, 40.91402010038242), 4326) AS dist, 
             tags->'addr:unit' AS housenumber,
             tags -> 'addr:street' AS street,
             tags -> 'addr:city' AS city,
@@ -198,8 +198,21 @@ FROM
   planet_osm_point points
 ) AS p1
 WHERE (p1.tags->'addr:city' IS NOT NULL
-OR p1.tags->'addr:unit' IS NOT NULL
-OR p1.tags->'addr:state' IS NOT NULL
-OR p1.tags->'addr:street' IS NOT NULL)
+AND p1.tags->'addr:unit' IS NOT NULL
+AND p1.tags->'addr:state' IS NOT NULL
+AND p1.tags->'addr:street' IS NOT NULL)
 ORDER BY dist ASC
 LIMIT 20;
+
+/etc/apache2/conf.modules.d/10-worker.conf
+
+<IfModule mpm_*_module>
+    StartServers                4    #(Optional)
+    MinSpareThreads             25
+    MaxSpareThreads             75
+    ThreadLimit                 64
+    ThreadsPerChild             19
+    MaxRequestWorkers           38
+    MaxClients                  5000
+    MaxConnectionsPerChild      2000              #(Optional - Less for more buggy processes to manage memory leaks)
+</IfModule>
