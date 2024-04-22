@@ -15,7 +15,7 @@ app.post("/api/address", async function(req, res) {
      bool:{
       filter:{
         geo_distance:{
-          distance: "100m",
+          distance: "5m",
           "geometry.coordinates":[lon, lat]
         }
         
@@ -66,3 +66,12 @@ res.status(200).json({
 app.listen(25000, "0.0.0.0", async () => {
   console.log("search server started");
 });
+
+/*
+{ lat: 40.91402010038242, lon: -73.13018149999999 }
+{ natural: 'tree' }
+NOT FOUND
+{ lat: 40.918625813424754, lon: -73.12088112969158 }
+
+
+*/
