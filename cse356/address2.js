@@ -8,6 +8,11 @@ app.post("/api/address", async function (req, res) {
   const { lat, lon } = req.body;
   console.log(req.body);
 
+  var config = {
+    method: "get",
+    url: `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&apiKey=1b5d2c0f481446dea579ad74ad3f2ef9`,
+    headers: {},
+  };
   axios(config)
     .then(function (response) {
       console.log(response.data["features"][0]["properties"]);
