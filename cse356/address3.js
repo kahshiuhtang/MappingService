@@ -8,20 +8,21 @@ const app = express();
 
 // Configure PostgreSQL connection
 const client = new Client({
-  user: 'renderer',
-  host: '146.190.141.61',
-  database: 'gis',
-  password: 'renderer',
+  user: "renderer",
+  host: "146.190.141.61",
+  database: "gis",
+  password: "renderer",
   port: 5432, // Default PostgreSQL port
 });
 
 // Connect to the database
-client.connect()
+client
+  .connect()
   .then(() => {
-    console.log('Connected to PostgreSQL database');
+    console.log("Connected to PostgreSQL database");
   })
-  .catch(error => {
-    console.error('Error connecting to PostgreSQL database:', error);
+  .catch((error) => {
+    console.error("Error connecting to PostgreSQL database:", error);
   });
 
 app.use(express.json());
@@ -142,10 +143,11 @@ app.post('/api/address', async (req, res) => {
           ORDER BY dist ASC
           LIMIT 20;
     `;
-    
+
     // Execute the query
     const result = await client.query(query);
-    const addr = result.rows[0]
+    console.log(result.rows);
+    const addr = result.rows[0];
     // Send query result as JSON response
     var r = {
       "number": addr["number"] ? addr["number"] : "",
@@ -158,8 +160,8 @@ app.post('/api/address', async (req, res) => {
     res.status(200).json(r)
   } catch (error) {
     // Handle errors
-    console.error('Error executing query:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error executing query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

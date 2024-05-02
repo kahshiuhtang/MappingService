@@ -1,0 +1,109 @@
+"area"=>"yes", "owner"=>"University Of Massachusetts", "website"=>"https://www.umb.edu/nantucket/about", "addr:city"=>"Nantucket", "ownership"=>"state", "addr:state"=>"MA", "addr:street"=>"Polpis Road", "addr:postcode"=>"02554", "massgis:OS_ID"=>"197-265", "massgis:FEESYM"=>"COM", "massgis:DCAM_ID"=>"0", "massgis:POLY_ID"=>"265", "massgis:TOWN_ID"=>"197", "massgis:ATT_DATE"=>"1901/01/01", "massgis:LEV_PROT"=>"N", "massgis:ARTICLE97"=>"9", "massgis:FEE_OWNER"=>"University of Massachusetts", "massgis:PRIM_PURP"=>"C", "massgis:SITE_NAME"=>"UMASS FIELD STATION", "massgis:ASSESS_ACR"=>"0.00000000", "massgis:DEED_ACRES"=>"0.00000000", "massgis:EOEAINVOLV"=>"0", "massgis:FY_FUNDING"=>"0", "massgis:OS_DEED_BO"=>"0", "massgis:OS_DEED_PA"=>"0", "massgis:OWNER_ABRV"=>"UMASS", "massgis:OWNER_TYPE"=>"S", "massgis:PUB_ACCESS"=>"X" | addr:housename | addr:housenumber
+ 0.0045340060663701855 | "ele"=>"6", "website"=>"https://eganmaritime.org/shipwreck-lifesaving-museum", "alt_name"=>"Nantucket Life Saving Museum", "operator"=>"Egan Maritime Institute", "wikidata"=>"Q14715744", "addr:city"=>"Nantucket", "addr:state"=>"MA", "addr:street"=>"Polpis Road", "description"=>"Preserves the memory of Islanders who risked their lives to save shipwrecked mariners. These people served in organizations devoted to maritime rescue, such as the Mass. Humane Society; U.S Life-Saving Service; and U.S. Coast Guard."                                                                                                                                                                                                 
+
+0 | "ele"=>"0", "website"=>"https://www.nantucketconservation.org/properties/nantucket-field-station/", "addr:state"=>"MA"
+                     0 | "name:ar"=>"ماساتشوستس", "name:az"=>"Massaçusets", "name:bg"=>"Масачузетс", "name:br"=>"Massachusetts", "name:el"=>"Μασαχουσέτη", "name:en"=>"Massachusetts", "name
+:eo"=>"Masaĉuseco", "name:eu"=>"Masachusets", "name:fa"=>"ماساچوست", "name:he"=>"מסצ'וסטס", "name:hi"=>"मसाचुएट्स", "name:hy"=>"Մասաչուսեթս", "name:ja"=>"マサチューセッツ州", "name:ka"=>"მას
+აჩუსეტსი", "name:ko"=>"매사추세츠", "name:lt"=>"Masačusetsas", "name:lv"=>"Masačūsetsa", "name:nv"=>"Méésíchóoshish Hahoodzo", "name:pl"=>"Massachusetts", "name:ru"=>"Массачусетс", "name:s
+r"=>"Масачусетс", "name:ta"=>"மாசச்சூசெட்ஸ்", "name:th"=>"รัฐแมสซาชูเซตส์", "name:uk"=>"Массачусетс", "name:yi"=>"מאסאטשוסעטס", "name:zh"=>"马萨诸塞州 / 麻薩諸塞州 / 麻省", "name:hak"=>"Massachu
+setts", "name:haw"=>"Makakukeka", "name:nan"=>"Massachusetts", "name:wam"=>"Mâsach8sut", "ref:USCG"=>"MS", "ref:USPS"=>"MA", "ref:fips"=>"25", "wikidata"=>"Q771", "ISO3166-2"=>"US-MA", "wi
+kipedia"=>"en:Massachusetts", "name:zh-HK"=>"麻省", "name:zh-TW"=>"麻薩諸塞州", "short_name"=>"Mass.", "name:zh-Hans"=>"马萨诸塞州", "name:zh-Hant"=>"麻薩諸塞州 / 麻省", "official_name"=>"
+Commonwealth of Massachusetts", "short_name:en"=>"Mass.", "is_in:country_code"=>"US"
+                     0 | "ele"=>"-02", "image"=>"https://upload.wikimedia.org/wikipedia/commons/5/5f/Nantucket-08-2004.jpg", "website"=>"https://www.nantucket-ma.gov/1608/About-Nantucket",
+ "alt_name"=>"Nantucket", "wikidata"=>"Q49149", "wikipedia"=>"en:Nantucket", "description"=>"Nantucket is derived from the Indian \"Nanticut\" meaning \"the far-away land,\" \"Nantuck\" me
+aning \"sandy, sterile soil,\" or \"Nautican,\" an Indian name for the island (Board on Geographic Names (BGN) files)"
+                     0 | "area"=>"yes", "salt"=>"yes", "tidal"=>"yes", "wetland"=>"saltmarsh"
+                     0 | "name:en"=>"Nantucket", "name:es"=>"Nantucket", "wikidata"=>"Q49149", "wikipedia"=>"en:Nantucket", "population"=>"14255", "border_type"=>"county;town", "official_n
+ame"=>"Town and County of Nantucket", "nist:fips_code"=>"25019", "nist:state_fips"=>"25", "population:date"=>"2020"
+                     0 | "area"=>"yes", "owner"=>"University Of Massachusetts", "website"=>"https://www.umb.edu/nantucket/about", "addr:city"=>"Nantucket", "ownership"=>"state", "addr:stat
+e"=>"MA", "addr:street"=>"Polpis Road", "addr:postcode"=>"02554", "massgis:OS_ID"=>"197-265", "massgis:FEESYM"=>"COM", "massgis:DCAM_ID"=>"0", "massgis:POLY_ID"=>"265", "massgis:TOWN_ID"=>
+"197", "massgis:ATT_DATE"=>"1901/01/01", "massgis:LEV_PROT"=>"N", "massgis:ARTICLE97"=>"9", "massgis:FEE_OWNER"=>"University of Massachusetts", "massgis:PRIM_PURP"=>"C", "massgis:SITE_NAME
+"=>"UMASS FIELD STATION", "massgis:ASSESS_ACR"=>"0.00000000", "massgis:DEED_ACRES"=>"0.00000000", "massgis:EOEAINVOLV"=>"0", "massgis:FY_FUNDING"=>"0", "massgis:OS_DEED_BO"=>"0", "massgis:
+OS_DEED_PA"=>"0", "massgis:OWNER_ABRV"=>"UMASS", "massgis:OWNER_TYPE"=>"S", "massgis:PUB_ACCESS"=>"X"
+                     0 | "flag"=>"File:Ensign of New England (pine only).svg", "name:af"=>"Nieu-Engeland", "name:an"=>"Nueva Anglaterra", "name:ar"=>"أقليم نيو إنجلاند", "name:az"=>"Yeni İniltərə", "name:be"=>"Новая Англія", "name:bg"=>"Нова Англия", "name:br"=>"Bro-Saoz Nevez", "name:ca"=>"Nova Anglaterra", "name:cs"=>"Nová Anglie", "name:cv"=>"Çĕнĕ Англи", "name:cy"=>"Llo
+egr Newydd", "name:de"=>"Neuengland", "name:el"=>"Νέα Αγγλία", "name:en"=>"New England", "name:eo"=>"Nov-Anglio", "name:es"=>"Nueva Inglaterra", "name:et"=>"Uus-Inglismaa", "name:eu"=>"Ing
+alaterra Berria", "name:fa"=>"نیو-اینگلند", "name:fi"=>"Uusi-Englanti", "name:fo"=>"Nýongland", "name:fr"=>"Nouvelle-Angleterre", "name:fy"=>"Nij-Ingelân", "name:ga"=>"Sasana Nua", "name:g
+d"=>"Sasainn Nuadh", "name:gl"=>"Nova Inglaterra", "name:he"=>"ניו אינגלנד", "name:hi"=>"न्यू इंग्लैंड", "name:hr"=>"Nova Engleska", "name:hu"=>"Új-Anglia", "name:ia"=>"Nove Anglaterra", "name:i
+s"=>"Nýja England", "name:it"=>"Nuova Inghilterra", "name:ja"=>"ニューイングランド", "name:ka"=>"ახალი ინგლისი", "name:kk"=>"Жаңа Англия", "name:kn"=>"ನ್ಯೂ ಇಂಗ್ಲೆಂಡ್", "name:ko"=>"뉴잉글랜드",
+ "name:la"=>"Nova Anglia", "name:li"=>"Nui Ingeland", "name:lt"=>"Naujoji Anglija", "name:lv"=>"Jaunanglija", "name:mk"=>"Новоанглиска Област", "name:mr"=>"न्यू इंग्लंड", "name:nl"=>"Nieuw-Enge
+land", "name:oc"=>"Nòva Anglatèrra", "name:pa"=>"ਨਿਊ ਇੰਗਲੈਂਡ", "name:pl"=>"Nowa Anglia", "name:pt"=>"Nova Inglaterra", "name:ro"=>"Noua Anglie", "name:ru"=>"Новая Англия", "name:sc"=>"Noa Ing
+hilterra", "name:sh"=>"Nova Engleska", "name:sk"=>"Nové Anglicko", "name:sl"=>"Nòva Ánglija", "name:sr"=>"Нова Енглеска", "name:sv"=>"Nya England", "name:sw"=>"Uingereza Mpya", "name:ta"=>
+"நியூ இங்கிலாந்து", "name:te"=>"న్యూ ఇంగ్లండ్", "name:th"=>"นิวอิงแลนด์", "name:tl"=>"Bagong Inglatera", "name:tr"=>"Yeni İngiltere", "name:uk"=>"Нова́ А́нглія", "name:ur"=>"نیو انگلینڈ", "name:uz"=
+>"Yangi angliya", "name:vi"=>"Tân Anh Cát Lợi", "name:yi"=>"ניו ענגלאנד", "name:zh"=>"新英格兰", "name:ast"=>"Nueva Inglaterra", "name:bar"=>"Neiengland", "name:chr"=>"ᎢᏤᏍᏛ ᎠᏂᎩᎵᏏ", "name:f
+rr"=>"Nei-Ingelun", "name:hsb"=>"Nowa Jendźelska", "name:mzn"=>"نیو-اینگلند", "name:sco"=>"New Ingland", "name:vec"=>"Nova Inghiltera", "name:wuu"=>"新英格兰", "name:yue"=>"紐英倫", "wikid
+ata"=>"Q18389", "wikipedia"=>"en:New England", "alt_name:eo"=>"Nov-Anglujo", "alt_name:fa"=>"نیو انگلند", "alt_name:li"=>"Nui-Ingeland", "alt_name:vi"=>"Tân Anh", "name:be-tarask"=>"Новая 
+Ангельшчына", "name:zh-min-nan"=>"Sin Eng-lân"
+
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            tags
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+FROM
+  planet_osm_polygon points
+) AS p1
+WHERE p1.tags->'addr:street' IS NOT NULL
+ORDER BY dist ASC
+LIMIT 100;
+
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            tags,
+            p1.hn,
+            p1.hu
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+FROM
+  planet_osm_road points
+) AS p1
+WHERE dist = 0
+ORDER BY dist ASC
+LIMIT 100;
+
+SELECT *
+FROM (
+    SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            p1.tags,
+            p1.hn,
+            p1.hu
+    FROM (
+        SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+        FROM planet_osm_polygon points
+    ) AS p1
+) AS subquery
+WHERE dist = 0
+ORDER BY dist ASC
+LIMIT 100;
+
+
+
+
+SELECT *
+FROM (
+    SELECT  p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            p1.tags AS tags,
+            p1.hn,
+            p1.hu
+    FROM (
+        SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+        FROM planet_osm_line points
+    ) AS p1
+) AS subquery
+WHERE tags->'addr:street' = 'Polpis Road' AND tags->'addr:state' = 'MA'
+ORDER BY dist ASC
+LIMIT 100;
+
+SELECT *
+FROM (
+    SELECT  p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            p1.tags AS tags,
+            p1.hn,
+            p1.hu
+    FROM (
+        SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+        FROM planet_osm_line points
+    ) AS p1
+) AS subquery
+WHERE tags->'addr:housenumber' = '180'
+ORDER BY dist ASC
+LIMIT 100;
+
+SELECT * FROM planet_osm_line;

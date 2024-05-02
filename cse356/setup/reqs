@@ -58,6 +58,17 @@ docker run \
     -d overv/openstreetmap-tile-server \
     run
 
+docker run \
+    -p 8080:80 \
+    -p 5432:5432 \
+    --name "tileserver" \
+    -e THREADS=7 \
+    -e "OSM2PGSQL_EXTRA_ARGS=-C 63000" \
+    -v osm-data:/data/database/ \
+    -v osm-tiles:/data/tiles/ \
+    -d overv/openstreetmap-tile-server \
+    run
+
 search: 165.227.213.234
 load-balancer: 143.198.19.157
 varnish: 167.172.239.172
@@ -79,7 +90,7 @@ rm 000-default.conf
 // 
 a2dismod php8.1
 a2dismod mpm_prefork
-a2enmod mpm_worker
+a2dismod mpm_worker
 sudo vi /etc/apache2/mods-available/mpm_worker.conf
 FIND THIS SECTION AND REPLACE: 
 
@@ -178,3 +189,111 @@ docker run \
     -v osm-tiles:/data/tiles/ \
     -d overv/openstreetmap-tile-server \
     run
+SELECT tags
+FROM planet_osm_roads
+WHERE ST_Intersects(ST_AsText(ST_Transform(way, 4326)), ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326));
+
+SELECT tags, p1.point <-> ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326) AS dist
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point
+FROM
+  planet_osm_point points
+) AS p1
+WHERE
+tags -> 'address' IS NOT NULL
+ORDER BY dist ASC
+LIMIT 100;
+'41.29342817549477', "lon": '-70.04069691126233'}'
+41.29342817549477', 'lon': '-70.04069691126233
+
+
+/etc/apache2/conf.modules.d/10-worker.conf
+
+<IfModule mpm_*_module>
+    StartServers                4    #(Optional)
+    MinSpareThreads             25
+    MaxSpareThreads             75
+    ThreadLimit                 64
+    ThreadsPerChild             19
+    MaxRequestWorkers           38
+    MaxClients:5000
+    MaxConnectionsPerChild      2000              #(Optional - Less for more buggy processes to manage memory leaks)
+</IfModule>
+'
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            tags->'addr:number' AS housenumber,
+            tags -> 'addr:street' AS street,
+            tags -> 'addr:city' AS city,
+            tags -> 'addr:state' AS state,
+            tags -> 'addr:postcode' AS zip
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point
+FROM
+  planet_osm_point
+) AS p1
+WHERE (
+p1.tags->'addr:street' ILIKE 'Polpis')
+
+UNION ALL
+
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            tags->'addr:number' AS housenumber,
+            tags -> 'addr:street' AS street,
+            tags -> 'addr:city' AS city,
+            tags -> 'addr:state' AS state,
+            tags -> 'addr:postcode' AS zip
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point
+FROM
+  planet_osm_roads
+) AS p1
+WHERE (
+p1.tags->'addr:street' ILIKE 'Polpis')
+
+ORDER BY dist ASC
+LIMIT 100;
+
+ways
+rels 
+lines 
+roads
+polygons
+
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-73.98566160671253, 40.74850923574858), 4326) AS dist, 
+            tags->'addr:number' AS housenumber,
+            tags -> 'addr:street' AS street,
+            tags -> 'addr:city' AS city,
+            tags -> 'addr:state' AS state,
+            tags -> 'addr:postcode' AS zip
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+FROM
+  planet_osm_polygon points
+) AS p1
+ORDER BY dist ASC
+LIMIT 100;
+addr:housename | addr:housenumber
+
+SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
+            tags
+FROM 
+(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS hn, 'addr:housenumber' AS hu
+FROM
+  planet_osm_point points
+) AS p1
+WHERE (
+p1.tags->'addr:street' ILIKE 'Polpis' OR 
+p1.hn ILIKE 'Polpis' OR 
+p1.hu ILIKE 'Polpis' )
+ORDER BY dist ASC
+LIMIT 100;
+
+export PGPASSWORD=renderer
+docker run -p 3000:3000 \
+        -e PGPASSWORD \
+        -e DATABASE_URL=postgresql://renderer@146.190.141.61:5432/gis \
+        ghcr.io/maplibre/martin
+
+wget https://github.com/maptiler/tileserver-gl/releases/download/v1.3.0/zurich_switzerland.mbtiles
+docker run --memory 15g --rm -it -v $(pwd):/data -p 8080:8080 maptiler/tileserver-gl --file tiles.mbtiles
+[in your browser, visit http://[server ip]:8080]
