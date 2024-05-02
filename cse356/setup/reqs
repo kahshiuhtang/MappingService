@@ -163,91 +163,18 @@ https://stackoverflow.com/questions/344203/maximum-number-of-threads-per-process
  psql -h localhost -U renderer gis
 
 
-SELECT tags
-FROM planet_osm_point
-WHERE ST_Intersects(ST_AsText(ST_Transform(way, 4326)), ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326));
-
-UNION ALL
-
-SELECT tags
-FROM planet_osm_roads
-WHERE ST_Intersects(ST_AsText(ST_Transform(way, 4326)), ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326))
-
-SELECT tags
-FROM planet_osm_roads
-WHERE ST_Intersects(ST_AsText(ST_Transform(way, 4326)), ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326));
-
-SELECT tags, p1.point <-> ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326) AS dist
-FROM 
-(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point
-FROM
-  planet_osm_point points
-) AS p1
-WHERE
-tags -> 'address' IS NOT NULL
-ORDER BY dist ASC
-LIMIT 100;
-
-SELECT p1.point <-> ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326) AS dist, 
-            tags->'addr:unit' AS housenumber,
-            tags -> 'addr:street' AS street,
-            tags -> 'addr:city' AS city,
-            tags -> 'addr:state' AS state,
-            tags -> 'addr:postcode' AS zip,
-            tags,
-            house, 
-            number
-FROM 
-(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS house, 'addr:housenumber' As number
-FROM
-  planet_osm_polygon points
-) AS p1
-WHERE (
- p1.tags->'addr:city' = 'Stony Brook')
-ORDER BY dist ASC
-LIMIT 1000;
-
-
-
-SELECT p1.point <-> ST_AsText(ST_MakePoint(-73.12088112969158, 40.918625813424754), 4326) AS dist, 
-            tags->'addr:unit' AS housenumber,
-            tags -> 'addr:street' AS street,
-            tags -> 'addr:city' AS city,
-            tags -> 'addr:state' AS state,
-            tags -> 'addr:postcode' AS zip,
-            tags,
-            house, 
-            number
-FROM 
-(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, 'addr:housename' AS house, 'addr:housenumber' As number
-FROM
-  planet_osm_point points
-) AS p1
-WHERE (
-  p1.tags IS NOT NULL)
-ORDER BY dist ASC
-LIMIT 20;
-41.29342817549477', 'lon': '-70.04069691126233
-SELECT p1.point <-> ST_AsText(ST_MakePoint(-70.04069691126233, 41.29342817549477), 4326) AS dist, 
-            number,
-            tags -> 'addr:street' AS street,
-            tags -> 'addr:city' AS city,
-            tags -> 'addr:state' AS state,
-            tags -> 'addr:postcode' AS zip
-FROM 
-(SELECT points.tags::hstore AS tags, ST_AsText(ST_Transform(points.way, 4326)) AS point, "addr:housename" AS house, "addr:housenumber" As number
-FROM
-  planet_osm_polygon points
-) AS p1
-WHERE (
-  p1.number IS NOT NULL 
-  AND
- p1.tags->'addr:city' IS NOT NULL
- AND 
- p1.tags->'addr:street' IS NOT NULL)
-ORDER BY dist ASC
-LIMIT 20;
 
 SELECT osm_id, "addr:housename", "addr:housenumber" FROM planet_osm_polygon WHERE  tags->'addr:city' = 'Stony Brook' AND tags->'addr:street' = 'Nicolls Road';
 
 osm2pgsql --slim -d gis --hstore --multi-geometry --number-processes 4 --tag-transform-script /home/osm/openstreetmap-carto/openstreetmap-carto.lua --style /home/osm/openstreetmap-carto/openstreetmap-carto.style -C 8400 /home/osm/us-northeast.osm.pbf
+
+docker run \
+    -p 8080:80 \
+    -p 5432:5432 \
+    --memory=60g \
+    --name "tileserver2" \
+    -e "OSM2PGSQL_EXTRA_ARGS=-C 1500" \
+    -v osm-data:/data/database/ \
+    -v osm-tiles:/data/tiles/ \
+    -d overv/openstreetmap-tile-server \
+    run

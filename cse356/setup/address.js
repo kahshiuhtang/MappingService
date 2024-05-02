@@ -64,14 +64,5 @@ res.status(200).json({
 })
 
 app.listen(25000, "0.0.0.0", async () => {
-  console.log("search server started");
+  console.log("server started");
 });
-
-/*
-{ lat: 40.91402010038242, lon: -73.13018149999999 }
-{ natural: 'tree' }
-NOT FOUND
-{ lat: 40.918625813424754, lon: -73.12088112969158 }
-
-
-*/
