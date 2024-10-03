@@ -1,0 +1,36 @@
+---
+- name: Setup Turn service with Node.js
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Install NVM
+      shell: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+    - name: Load NVM and install Node.js LTS
+      shell: |
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        nvm install --lts
+
+    - name: Create and setup Turn directory
+      file:
+        path: /srv/turn
+        state: directory
+        mode: '0755'
+
+    - name: Initialize npm and install dependencies
+      shell: |
+        cd /srv/turn
+        npm init -y
+        npm install express axios nodemon sharp stream @elastic/elasticsearch
+        npm install forever -g
+
+    - name: Copy index.js
+      copy:
+        src: ../js/monolith.js
+        dest: /srv/turn/index.js
+        mode: '0644'
+
+    - name: Start the app using forever
+      shell: forever start /srv/turn/index.js

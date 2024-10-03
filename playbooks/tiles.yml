@@ -1,0 +1,59 @@
+---
+- name: Setup OSM Tile Server
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create Docker volumes
+      docker_volume:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - osm-data
+        - osm-tiles
+
+    - name: Download OSM data file
+      get_url:
+        url: [LINK_TO_OSM_FILE]
+        dest: /root/us-northeast.osm.pbf
+
+    - name: Import OSM data to Tile Server
+      docker_container:
+        name: tile-import
+        image: overv/openstreetmap-tile-server
+        volumes:
+          - /root/us-northeast.osm.pbf:/data/region.osm.pbf
+          - osm-data:/data/database/
+        command: import
+        state: started
+
+    - name: Run OSM tile server (1st instance)
+      docker_container:
+        name: tileserver2
+        image: overv/openstreetmap-tile-server
+        ports:
+          - "8080:80"
+          - "5432:5432"
+        memory: "60g"
+        env:
+          THREADS: 15
+          OSM2PGSQL_EXTRA_ARGS: "-C 60000"
+        volumes:
+          - osm-data:/data/database/
+          - osm-tiles:/data/tiles/
+        state: started
+
+    - name: Run OSM tile server (2nd instance)
+      docker_container:
+        name: tileserver
+        image: overv/openstreetmap-tile-server
+        ports:
+          - "8080:80"
+          - "5432:5432"
+        env:
+          THREADS: 7
+          OSM2PGSQL_EXTRA_ARGS: "-C 63000"
+        volumes:
+          - osm-data:/data/database/
+          - osm-tiles:/data/tiles/
+        state: started

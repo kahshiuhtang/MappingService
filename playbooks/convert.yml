@@ -1,0 +1,28 @@
+---
+- name: Install Apache, PHP and prepare convert.php
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Update apt packages
+      apt:
+        update_cache: yes
+
+    - name: Install Apache and PHP
+      apt:
+        name: 
+          - apache2
+          - php
+          - libapache2-mod-php
+        state: present
+
+    - name: Deploy convert.php
+      copy:
+        src: ../php/convert.php
+        dest: /var/www/html/convert.php
+        mode: '0644'
+
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted

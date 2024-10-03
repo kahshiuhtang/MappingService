@@ -1,0 +1,15 @@
+---
+- name: Install Node Exporter
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Pull and run Node Exporter container
+      docker_container:
+        name: node-exporter
+        image: prom/node-exporter
+        state: started
+        restart_policy: always
+        ports:
+          - "9101:9100"
+        detach: yes

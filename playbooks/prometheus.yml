@@ -1,0 +1,29 @@
+---
+- name: Setup Prometheus Server
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create Prometheus Docker volume
+      docker_volume:
+        name: prometheus-data
+        state: present
+
+    - name: Copy Prometheus configuration file
+      copy:
+        src: /path/to/your/prometheus.yml  # Path to your local Prometheus configuration file
+        dest: /root/prom.yml
+        mode: '0644'
+
+    - name: Pull and run Prometheus container
+      docker_container:
+        name: prometheus
+        image: prom/prometheus
+        state: started
+        restart_policy: always
+        ports:
+          - "9090:9090"
+        volumes:
+          - "/root/prom.yml:/etc/prometheus/prometheus.yml"
+          - "prometheus-data:/prometheus"
+        detach: yes
